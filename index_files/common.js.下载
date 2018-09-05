@@ -1,0 +1,144 @@
+//屏蔽鼠标右键
+function disabledRightButton()
+{
+	document.oncontextmenu = function(e){return false;}
+	document.onselectstart = function(e){return false;}
+	if (navigator.userAgent.indexOf("Firefox") > -1)
+	{
+		document.writeln("<style>body {-moz-user-select: none;}</style>");
+	}
+}
+
+
+// 设为首页
+function setHome(obj, vrl)
+{
+	try
+	{
+		obj.style.behavior='url(#default#homepage)';
+		obj.setHomePage(vrl);
+	}
+	catch(e)
+	{
+		if(window.netscape)
+		{
+			try 
+			{
+				netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+			}
+			catch (e) 
+			{
+				alert("此操作被浏览器拒绝！\n请在浏览器地址栏输入“about:config”并回车\n然后将[signed.applets.codebase_principal_support]的值设置为'true',双击即可。");
+			return;
+			}
+			var prefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch);
+			prefs.setCharPref('browser.startup.homepage', vrl);
+
+		}
+	}
+} 
+
+
+// 加入收藏
+function addFavorite(sURL, sTitle)
+{
+	try
+	{
+		window.external.addFavorite(sURL, sTitle);
+	}
+	catch (e)
+	{
+		try
+		{
+			window.sidebar.addPanel(sTitle, sURL, "");
+		}
+		catch (e)
+		{
+			alert("您使用的浏览器不支持此功能，请使用Ctrl+D进行添加");
+		}
+	}
+}
+
+function flashPlay( pics, texts, links, flash_width, flash_height, text_height){
+	var swf_height		= flash_height + text_height;
+	var banner			= '<param name="allowScriptAccess" value="sameDomain"><param name="movie" value="images/flash1.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">'
+	document.write('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="' + flash_width + '" height="' + swf_height + '">');
+	document.write(banner);
+	document.write('<param name="menu" value="false"><param name=wmode value="opaque">');
+	document.write('<param name="FlashVars" value="pics=' + pics + '&links=' + links + '&texts=' + texts + '&borderwidth=' + flash_width + '&borderheight=' + flash_height + '&textheight=' + text_height + '">');
+	document.write('<embed src="images/flash1.swf" quality="high" allowScriptAccess="sameDomain" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" wmode="opaque" width="' + flash_width + '" height="' + swf_height + '" bgcolor="#FFFFFF" menu="false" FlashVars="pics=' + pics + '&links=' + links + '&texts=' + texts + '&borderwidth=' + flash_width + '&borderheight=' + flash_height + '&textheight=' + text_height + '"></embed>');
+	document.write('</object>');
+}
+
+// 回到顶部
+$(document).ready(function(){
+	$(window).scroll(function(){
+		var scrollH = $(window).scrollTop();
+ 		if(scrollH>300){ 
+ 			$(".back-to").fadeIn();
+ 		}else{
+ 			$(".back-to").fadeOut();
+ 		}
+	})
+	$(".back-to").on('click',function(){
+		$('html,body').animate({'scrollTop':0},500);
+	});
+})
+
+// 在线QQ
+$(function(){
+	var m_woo_panel = $('#m-woo-panel');
+	$('#j-close').on('click',function(){
+		m_woo_panel.hide();
+	});
+	$('#j-console').on("click",function(){
+		if($(this).hasClass("m-console-active")){
+			$(this).removeClass("m-console-active");
+			m_woo_panel.animate({right:0});
+		}else{
+			$(this).addClass("m-console-active");
+			m_woo_panel.animate({right:-164});
+		};
+	});
+});
+
+// QQ滚动特效
+$(document).ready(function(){
+	$(".online_qq").floatadv();
+});
+
+jQuery.fn.floatadv = function(loaded) {
+	var obj = this;
+	body_height = parseInt($(window).height());
+	block_height = parseInt(obj.height());
+	
+	top_position = parseInt((body_height/2) - (block_height/2) + $(window).scrollTop());
+	
+	if (body_height<block_height) { top_position = 0 + $(window).scrollTop(); };
+	
+	if(!loaded) {
+		obj.css({'position': 'absolute'});
+		obj.css({ 'top': top_position });
+		$(window).bind('resize', function() { 
+			obj.floatadv(!loaded);
+		});
+		$(window).bind('scroll', function() { 
+			obj.floatadv(!loaded);
+		});
+	} else {
+		obj.stop();
+		obj.css({'position': 'absolute'});
+		obj.animate({ 'top': top_position }, 400, 'linear');
+	}
+}
+
+
+//设置字体大小
+function setFontSize(size)
+{
+	var obj = document.getElementById("contentSize");
+	if (obj)
+	{
+		obj.style.fontSize = size + "px";
+	}
+}
